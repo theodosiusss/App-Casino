@@ -14,7 +14,6 @@ module.exports = function (defaults) {
       },
     },
     'ember-cli-babel': { enableTypeScriptTransform: true },
-
     // Add options here
   });
 
