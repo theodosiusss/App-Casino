@@ -1,5 +1,6 @@
 # App-Casino
-*Framework: Ember.js*
+
+_Framework: Ember.js_
 
 ## Features
 

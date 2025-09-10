@@ -1,12 +1,12 @@
-import { action } from "@ember/object";
+import { action } from '@ember/object';
 import Component from '@glimmer/component';
 import { tracked } from '@glimmer/tracking';
 
 export default class EichelComponent extends Component {
-  @tracked pipo = "rescueHeliSpotterPipoSanktGallen";
+  @tracked pipo = 'rescueHeliSpotterPipoSanktGallen';
 
   @action
   addPipoSanktGallen() {
-    this.pipo += " rescueHeliSpotterPipoSanktGallen";
+    this.pipo += ' rescueHeliSpotterPipoSanktGallen';
   }
 }

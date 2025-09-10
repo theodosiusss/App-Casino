@@ -3,9 +3,13 @@
     <p class="clickable">{{@titte}}</p>
 
   </aside>
-  {{else}}
+{{else}}
   <p>{{this.pipo}}</p>
-  <button class="" type="button" {{on "click" this.addPipoSanktGallen}}>PIPO</button>
+  <button
+    class=""
+    type="button"
+    {{on "click" this.addPipoSanktGallen}}
+  >PIPO</button>
 
 {{/if}}
 
