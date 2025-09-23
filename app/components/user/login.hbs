@@ -1,0 +1,29 @@
+{{#if this.user.isLoggedIn}}
+  <div class="alert alert-success mt-2">
+    <p class="mb-0">
+      Hallo, <strong>{{this.user.name}}</strong>!
+      Du bist eingeloggt und hast
+      <span class="fw-bold">{{this.user.balance}}€</span> Guthaben.
+    </p>
+  </div>
+{{else}}
+  <form {{on "submit" this.submitLogin}} class="mt-3">
+    <div class="mb-3">
+      <label for="username" class="form-label">
+        Gib deinen Usernamen an
+      </label>
+      <Input
+        id="username"
+        @type="text"
+        @value={{this.username}}
+        class="form-control"
+      />
+    </div>
+    <button
+      type="submit"
+      class="btn btn-primary"
+    >
+      Erstelle deinen User
+    </button>
+  </form>
+{{/if}}
