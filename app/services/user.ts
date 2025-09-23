@@ -9,8 +9,8 @@ export default class UserService extends Service {
   @tracked isVerified = false;
   @tracked badges: string[] = [];
 
-  constructor() {
-    super(...arguments);
+  constructor(...args: ConstructorParameters<typeof Service>) {
+    super(...args);
     this.getSavedUser();
 
     window.addEventListener('beforeunload', () => {
@@ -65,16 +65,16 @@ export default class UserService extends Service {
     const isVerified = localStorage.getItem("isVerified");
 
     if (name) {
-      this.name = JSON.parse(name);
+      this.name = JSON.parse(name) as string;
     }
     if (balance) {
-      this.balance = JSON.parse(balance);
+      this.balance = JSON.parse(balance) as number;
     }
     if (badges) {
-      this.badges = JSON.parse(badges);
+      this.badges = JSON.parse(badges) as string[];
     }
     if (isVerified) {
-      this.isVerified = JSON.parse(isVerified);
+      this.isVerified = JSON.parse(isVerified) as boolean;
     }
   }
 
