@@ -6,3 +6,10 @@
   bottom: 0;
   width: 100%;
 }
+
+.my-banner {
+  background-image: url("./images/background.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+}
