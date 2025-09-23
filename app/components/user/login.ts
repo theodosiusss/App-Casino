@@ -10,6 +10,11 @@ export default class LoginComponent extends Component {
   @tracked username = '';
 
   @action
+  updateUsername(event: Event) {
+    this.username = (event.target as HTMLInputElement).value;
+  }
+
+  @action
   submitLogin(event: Event) {
     event.preventDefault();
     this.user.setName(this.username);}

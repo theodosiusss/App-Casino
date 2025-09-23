@@ -12,11 +12,11 @@
       <label for="username" class="form-label">
         Gib deinen Usernamen an
       </label>
-      <Input
+      <input
         id="username"
-        @type="text"
-        @value={{this.username}}
-        class="form-control"
+        type="text"
+        value={{this.username}}
+        {{on "input" this.updateUsername}}
       />
     </div>
     <button
