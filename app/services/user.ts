@@ -12,9 +12,9 @@ export default class UserService extends Service {
     super(...args);
     this.getSavedUser();
 
-    window.addEventListener('beforeunload', () => {
-      this.saveAll();
-    });
+   // window.addEventListener('beforeunload', () => {
+   //   this.saveAll();
+   /// });
   }
 
   get isLoggedIn() {
