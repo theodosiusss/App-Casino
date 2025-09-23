@@ -6,3 +6,11 @@
   bottom: 0;
   width: 100%;
 }
+.my-banner {
+  background: blue;
+  background-image: url("./assets/images/background.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+
