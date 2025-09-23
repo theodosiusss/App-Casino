@@ -11,6 +11,25 @@
           href="/games"
           class="text-white text-decoration-none link-light"
         >Spiele</a>
+        {{#if this.user.isLoggedIn}}
+          <a
+            href="/login"
+            class="text-white text-decoration-none link-light"
+          >{{this.user.name}}
+          </a>
+          <a
+            href="/payment"
+            class="text-white text-decoration-none link-light"
+          >{{this.user.balance}}€
+          </a>
+        {{else}}
+          <a
+            href="/login"
+            class="text-white text-decoration-none link-light"
+          >Login
+          </a>
+        {{/if}}
+
       </nav>
     </div>
   </div>
