@@ -1,15 +1,40 @@
-/* Ember supports plain CSS out of the box. More info: https://cli.emberjs.com/release/advanced-use/stylesheets/ */
-
-.footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
+html, body {
+  height: 100%;
+  margin: 0;
 }
 
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: auto;
+  height: 70px; /* adjust to your header */
+}
+
+/* Footer */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100px; /* adjust to your footer */
+  z-index: auto;
+}
+
+/* Banner takes exactly the rest of the viewport */
 .my-banner {
   background-image: url("./images/background.jpg");
   background-size: cover;
   background-position: center;
-  height: 100vh;
+  position: absolute;
+  top: 70px;   /* push below header */
+  bottom: 100px; /* stop above footer */
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
