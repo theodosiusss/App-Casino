@@ -1,6 +1,8 @@
-<button
-  type="button"
-  {{on "click" (fn this.user.changeBalance 100)}}
->+100</button>
+<div class="bg justify-content-center my-banner">
+  <button
+    type="button"
+    {{on "click" (fn this.user.changeBalance 100)}}
+  >+100</button>
 
-<p>{{this.user.balance}}</p>
+  <p>{{this.user.balance}}</p>
+</div>
