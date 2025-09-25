@@ -27,7 +27,7 @@ html, body {
   background-size: cover;
   background-position: center;
   position: absolute;
-  inset: 70px auto 100px auto;
+  inset: 70px auto 100px;
   display: flex;
   justify-content: center;
   align-items: center;
