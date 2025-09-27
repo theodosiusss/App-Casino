@@ -34,3 +34,104 @@ body {
   align-items: center;
   text-align: center;
 }
+
+.slots{
+  width: 280px;
+  height: 240px;
+  padding: 20px;
+  border: 1px solid black;
+  display: flex;
+  justify-content: space-between;
+}
+.reel{
+  border: 1px solid black;
+  width: 80px;
+  height: 240px;
+}
+/* Existing styles remain the same */
+
+.slot-machine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.slots {
+  width: 280px;
+  height: 240px;
+  padding: 20px;
+  border: 1px solid black;
+  display: flex;
+  justify-content: space-between;
+  background: linear-gradient(145deg, #2c3e50, #34495e);
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.reel {
+  border: 2px solid #f1c40f;
+  width: 80px;
+  height: 240px;
+  background: linear-gradient(145deg, #ecf0f1, #bdc3c7);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.slot-icon {
+  transition: transform 0.1s ease-out;
+}
+
+.reel.spinning .slot-icon {
+  animation: spin 0.2s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(100%); }
+}
+
+.spin-button {
+  padding: 12px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  background: linear-gradient(145deg, #e74c3c, #c0392b);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.spin-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.spin-button:disabled {
+  background: linear-gradient(145deg, #95a5a6, #7f8c8d);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spin-button.spinning {
+  background: linear-gradient(145deg, #f39c12, #e67e22);
+}
+
+.results {
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 5px;
+  text-align: center;
+}
+
+.results h3 {
+  margin: 0;
+  color: #2c3e50;
+}

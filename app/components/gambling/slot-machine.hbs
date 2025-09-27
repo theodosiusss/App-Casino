@@ -1,0 +1,26 @@
+<div class="slot-machine">
+  <div class="slots">
+    <div class="reel"></div>
+    <div class="reel"></div>
+    <div class="reel"></div>
+  </div>
+
+  <button
+    type="button"
+    class="spin-button {{if this.isSpinning "spinning"}}"
+    {{on "click" this.spin}}
+    disabled={{this.isSpinning}}
+  >
+    {{#if this.isSpinning}}
+      Spinning...
+    {{else}}
+      Spin!
+    {{/if}}
+  </button>
+
+  {{#if this.spinResults.length}}
+    <div class="results">
+      <h3>Results: {{this.spinResult}}</h3>
+    </div>
+  {{/if}}
+</div>
