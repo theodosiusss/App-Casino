@@ -12,7 +12,7 @@ module('Integration | Component | slot-machine', function (hooks) {
 
     await render(hbs`<Gambling::Slot-Machine />`);
 
-    assert.dom().hasText('Not enough Credits');
+    assert.dom().hasText('Not enough Credits!');
 
     // Template block usage:
     await render(hbs`
