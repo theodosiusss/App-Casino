@@ -17,10 +17,9 @@ module('Integration | Component | slot-machine', function (hooks) {
     // Template block usage:
     await render(hbs`
       <Gambling::Slot-Machine>
-        template block text
       </Gambling::Slot-Machine>
     `);
 
-    assert.dom().hasText('template block text');
+    assert.dom().hasText('Not enough Credits!');
   });
 });
