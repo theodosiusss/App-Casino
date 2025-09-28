@@ -10,15 +10,15 @@ module('Integration | Component | slot-machine', function (hooks) {
     // Set any properties with this.set('myProperty', 'value');
     // Handle any actions with this.set('myAction', function(val) { ... });
 
-    await render(hbs`<SlotMachine />`);
+    await render(hbs`<Gambling::Slot-Machine />`);
 
     assert.dom().hasText('');
 
     // Template block usage:
     await render(hbs`
-      <SlotMachine>
+      <Gambling::Slot-Machine>
         template block text
-      </SlotMachine>
+      </Gambling::Slot-Machine>
     `);
 
     assert.dom().hasText('template block text');
