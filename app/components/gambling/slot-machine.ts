@@ -1,8 +1,8 @@
 import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import {service} from "@ember/service";
-import type UserService from "app-casino/services/user";
+import { service } from '@ember/service';
+import type UserService from 'app-casino/services/user';
 
 export interface SlotMachineSignature {
   Args: {
@@ -28,10 +28,20 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
 
   // Default icons if none provided
   get icons(): string[] {
-    return this.args.icons || [
-      '🍒', '🍋', '🍊', '🍇', '🍉',
-      '🔔', '💎', '7️⃣', '⭐', '🔔'
-    ];
+    return (
+      this.args.icons || [
+        '🍒',
+        '🍋',
+        '🍊',
+        '🍇',
+        '🍉',
+        '🔔',
+        '💎',
+        '7️⃣',
+        '⭐',
+        '🔔',
+      ]
+    );
   }
 
   get spinDuration(): number {
@@ -65,7 +75,7 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
 
   @action
   async spin(): Promise<void> {
-    if(this.user.balance < 100) return;
+    if (this.user.balance < 100) return;
     if (this.isSpinning) return;
     this.user.changeBalance(-100);
     this.isSpinning = true;
@@ -84,7 +94,7 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
 
     this.isSpinning = false;
 
-    if(this.spinResults.every((x) => x === this.spinResults[0])){
+    if (this.spinResults.every((x) => x === this.spinResults[0])) {
       this.user.addBadges();
       this.user.changeBalance(1000);
     }
@@ -130,10 +140,12 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
     reel.innerHTML = '';
 
     // Pick a "scrolling" index
-    const currentIndex = Math.floor(progress * this.icons.length * 6) % this.icons.length;
+    const currentIndex =
+      Math.floor(progress * this.icons.length * 6) % this.icons.length;
 
     for (let offset = -1; offset <= 1; offset++) {
-      const index = (currentIndex + offset + this.icons.length) % this.icons.length;
+      const index =
+        (currentIndex + offset + this.icons.length) % this.icons.length;
       const iconElement = this.createIconElement(this.icons[index] ?? '');
       iconElement.style.opacity = offset === 0 ? '1' : '0.5';
       reel.appendChild(iconElement);

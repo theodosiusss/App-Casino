@@ -18,7 +18,7 @@ export default class UserService extends Service {
   }
 
   get isLoggedIn() {
-    return !!(this.name);
+    return !!this.name;
   }
 
   get insufficientBalance() {

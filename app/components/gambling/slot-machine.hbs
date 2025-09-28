@@ -7,13 +7,13 @@
 
   <button
     type="button"
-    class="spin-button {{if this.isSpinning "spinning"}}"
+    class="spin-button {{if this.isSpinning 'spinning'}}"
     {{on "click" this.spin}}
     disabled={{this.isSpinning}}
   >
     {{#if this.isSpinning}}
       Spinning...
-      {{ else if this.user.insufficientBalance}}
+    {{else if this.user.insufficientBalance}}
       Not enough Credits!
     {{else}}
       Spin!

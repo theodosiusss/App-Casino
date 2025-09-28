@@ -2,7 +2,7 @@ html,
 body {
   height: 100%;
   margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background-color: #1e272e;
   color: white;
 }
@@ -101,7 +101,9 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 38px;
-  transition: transform 0.1s ease-out, opacity 0.2s ease;
+  transition:
+    transform 0.1s ease-out,
+    opacity 0.2s ease;
 }
 
 /* Active middle icon highlight */
@@ -116,8 +118,12 @@ body {
 }
 
 @keyframes spin {
-  from { transform: translateY(-100%); }
-  to { transform: translateY(100%); }
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(100%);
+  }
 }
 
 /* ==============================
@@ -149,7 +155,6 @@ body {
   transform: translateY(-3px);
   box-shadow: 0 6px 14px rgb(0 0 0 / 40%);
 }
-
 
 .spin-button.spinning {
   background: linear-gradient(145deg, #f39c12, #e67e22);
