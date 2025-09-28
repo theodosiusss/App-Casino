@@ -13,6 +13,8 @@
   >
     {{#if this.isSpinning}}
       Spinning...
+      {{ else if this.user.insufficientBalance}}
+      Not enough Credits!
     {{else}}
       Spin!
     {{/if}}
@@ -20,7 +22,7 @@
 
   {{#if this.spinResults.length}}
     <div class="results">
-      <h3>Results: {{this.spinResult}}</h3>
+      <h3>Results: {{this.spinResults}}</h3>
     </div>
   {{/if}}
 </div>

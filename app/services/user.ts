@@ -18,9 +18,12 @@ export default class UserService extends Service {
   }
 
   get isLoggedIn() {
-    return !!(this.balance && this.name);
+    return !!(this.name);
   }
 
+  get insufficientBalance() {
+    return this.balance < 100;
+  }
   setName(name: string) {
     this.name = name;
     this.balance += 100;
