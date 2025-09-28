@@ -1,8 +1,26 @@
 <div class="bg justify-content-center my-banner">
-  <button
-    type="button"
-    {{on "click" (fn this.user.changeBalance 100)}}
-  >+100</button>
+  <div class="container border bg-dark text-white p-4 rounded shadow">
+    <h1>Guthaben Aufladen</h1>
+    <div class="row">
 
-  <p>{{this.user.balance}}</p>
+      <button
+        type="button"
+        class="btn btn-success my-2"
+        {{on "click" (fn this.user.changeBalance 10 false)}}
+      >+10</button>
+      <button
+        type="button"
+        class="btn btn-success my-2"
+        {{on "click" (fn this.user.changeBalance 50 false)}}
+      >+50</button>
+      <button
+        type="button"
+        class="btn btn-success my-2"
+        {{on "click" (fn this.user.changeBalance 100 false)}}
+      >+100</button>
+    </div>
+
+
+    <p>Dein Jetziges Guthaben: {{this.user.balance}}€</p>
+  </div>
 </div>

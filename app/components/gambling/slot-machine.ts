@@ -8,7 +8,9 @@ export interface SlotMachineSignature {
   Args: {
     icons?: string[]; // Array of icon URLs or paths
     spinDuration?: number; // Duration of spin in milliseconds
-    onSpinComplete?: (results: string[]) => void; // Callback when spin completes
+    cost? : number;
+    price? : number;
+
   };
   Blocks: {
     default: [];
@@ -20,6 +22,9 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
   @tracked isSpinning = false;
   @tracked spinResults: string[] = [];
   @service declare user: UserService;
+
+   cost = this.args.cost ?? 100;
+   price = this.args.price ?? 1000;
 
   // Default values
   iconWidth = 80;
@@ -75,9 +80,9 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
 
   @action
   async spin(): Promise<void> {
-    if (this.user.balance < 100) return;
+    if (this.user.balance < this.cost) return;
     if (this.isSpinning) return;
-    this.user.changeBalance(-100);
+    this.user.changeBalance(-this.cost, true);
     this.isSpinning = true;
     this.spinResults = [];
 
@@ -95,15 +100,10 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
     this.isSpinning = false;
 
     if (this.spinResults.every((x) => x === this.spinResults[0])) {
-      this.user.addBadges();
-      this.user.changeBalance(1000);
+      this.user.changeBalance(this.price,true);
     }
     console.log(this.spinResults);
 
-    // Call completion callback if provided
-    if (this.args.onSpinComplete) {
-      this.args.onSpinComplete(this.spinResults);
-    }
   }
 
   private async spinReel(reel: HTMLElement, reelIndex: number): Promise<void> {

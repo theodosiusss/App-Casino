@@ -30,29 +30,39 @@ export default class UserService extends Service {
     this.saveAll();
   }
   @action
-  changeBalance(sum: number) {
-    this.balance += sum;
-    this.saveAll();
+  changeBalance(sum: number, isNotPay: boolean) {
+    if(isNotPay){
+      if(this.balance + sum >= 0){
+      this.balance += sum;
+      this.saveAll();
+      }
+      else {
+        alert("Du kannst dir dieses abzeichen nicht leisten")
+        this.saveAll();
+      }
+    }else {
+    if(this.balance + sum >= 10000){
+      alert("Sie können maximal 9999€ einzahlen");
+    }else {
+      this.balance += sum;
+      this.saveAll();
+    }
+    }
+
   }
   @action
   verify() {
     this.isVerified = true;
     this.saveAll();
   }
-
   @action
-  addBadges() {
-    if (this.balance > 1000 && !this.badges.includes('SuperGambler')) {
-      this.badges.push('SuperGambler');
-    }
-    if (this.balance > 10000 && !this.badges.includes('AlphaGambler')) {
-      this.badges.push('AlphaGambler');
-    }
-    if (this.balance > 20000 && !this.badges.includes('SigmaGambler')) {
-      this.badges.push('SigmaGambler');
-    }
+  addBadge(path: string) {
+    this.badges = [...this.badges, path];
     this.saveAll();
   }
+
+
+
   saveAll() {
     localStorage.setItem('user', JSON.stringify(this.name));
     localStorage.setItem('balance', JSON.stringify(this.balance));

@@ -176,3 +176,9 @@ body {
   font-size: 18px;
   font-weight: bold;
 }
+.badge-img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain; /* oder cover, falls du zuschneiden willst */
+}
+

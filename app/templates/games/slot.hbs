@@ -1,0 +1,21 @@
+  {{page-title "GAMBLING"}}
+  <div class="bg justify-content-center my-banner">
+
+    <div class="bg-dark justify-content-center p-5 rounded-4">
+      <h2>{{@model.name}} SUPO</h2>
+
+      <Gambling::Slot-Machine
+        @icons={{@model.icons}}
+        @cost={{@model.cost}}
+        @price={{@model.price}}
+      />
+
+
+      <LinkTo @route="games">Zurück zur Übersicht</LinkTo>
+    </div>
+
+  </div>
+
+  {{outlet}}
+
+
