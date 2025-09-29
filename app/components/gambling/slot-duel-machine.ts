@@ -3,7 +3,7 @@ import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 import type UserService from 'app-casino/services/user';
-import type {SlotMachineSignature} from "app-casino/components/gambling/slot-machine";
+import type { SlotMachineSignature } from 'app-casino/components/gambling/slot-machine';
 
 export default class SlotDuelMachine extends Component<SlotMachineSignature> {
   @service declare user: UserService;
@@ -19,6 +19,11 @@ export default class SlotDuelMachine extends Component<SlotMachineSignature> {
   icons: string[] = this.args.icons ?? [
     '🍒', '🍋', '🍊', '🍇', '🍉', '🔔', '💎', '7️⃣', '⭐'
   ];
+
+  // Audio elements
+  private spinAudio = new Audio('/assets/sounds/spin.mp3');
+  private winAudio = new Audio('/assets/sounds/win.mp3');
+  private loseAudio = new Audio('/assets/sounds/lose.mp3');
 
   get cost() { return this.args.cost ?? 100; }
   get price() { return this.args.price ?? 1000; }
@@ -53,11 +58,14 @@ export default class SlotDuelMachine extends Component<SlotMachineSignature> {
   /** Spin both player and bot reels */
   @action
   async spinBoth() {
-    if(this.round == 1) {
+    if (this.isSpinning || this.round >= 10) return;
+
+    if (this.round === 1) {
       this.user.changeBalance(-this.cost, true);
     }
-    if (this.isSpinning || this.round >= 10) return;
+
     this.isSpinning = true;
+    this.playSpinSound(); // 🎧 Start spin sound
 
     const playerReelsEls = Array.from(document.querySelectorAll('.player .reel')) as HTMLElement[];
     const botReelsEls = Array.from(document.querySelectorAll('.bot .reel')) as HTMLElement[];
@@ -80,19 +88,26 @@ export default class SlotDuelMachine extends Component<SlotMachineSignature> {
     const playerResult = playerReelsEls.map(el => getMiddleSymbol(el));
     const botResult = botReelsEls.map(el => getMiddleSymbol(el));
 
-    // Count wins only if all middle symbols match
     if (playerResult.every(x => x === playerResult[0])) this.playerWins++;
     if (botResult.every(x => x === botResult[0])) this.botWins++;
 
+    this.stopSpinSound(); // 🛑 stop spinning sound
     this.round++;
+
     if (this.round >= 10) {
-      if (this.playerWins > this.botWins){
+      if (this.playerWins > this.botWins) {
         this.roundWinner = 'Player wins the pot!';
-        this.user.changeBalance(this.pot,true);
+        this.user.changeBalance(this.pot, true);
+        this.playWinSound(); // 🏆
+      } else if (this.botWins > this.playerWins) {
+        this.roundWinner = 'Bot wins the pot!';
+        this.playLoseSound(); // 💸
+      } else {
+        this.roundWinner = "It's a tie!";
       }
-      else if (this.botWins > this.playerWins) this.roundWinner = 'Bot wins the pot!';
-      else this.roundWinner = "It's a tie!";
-      setTimeout(()=> window.location.reload(),3000);
+
+      // Restart the game after a short delay
+      setTimeout(() => window.location.reload(), 3000);
     }
 
     this.isSpinning = false;
@@ -100,7 +115,6 @@ export default class SlotDuelMachine extends Component<SlotMachineSignature> {
 
   /** Animate a single reel */
   private spinReel(reelEl: HTMLElement): Promise<void> {
-
     return new Promise((resolve) => {
       const duration = 2000 + Math.random() * 1000;
       const startTime = Date.now();
@@ -109,7 +123,6 @@ export default class SlotDuelMachine extends Component<SlotMachineSignature> {
         const elapsed = Date.now() - startTime;
         const progress = Math.min(elapsed / duration, 1);
 
-        // Update spinning icons
         reelEl.innerHTML = '';
         const currentIndex = Math.floor(progress * this.icons.length * 6) % this.icons.length;
         for (let offset = -1; offset <= 1; offset++) {
@@ -138,5 +151,44 @@ export default class SlotDuelMachine extends Component<SlotMachineSignature> {
 
       animate();
     });
+  }
+
+  // --- Audio helpers ---
+
+  private playSpinSound() {
+    try {
+      this.spinAudio.currentTime = 0;
+      this.spinAudio.loop = true;
+      this.spinAudio.play().catch(() => {});
+    } catch (e) {
+      console.warn('Spin audio failed', e);
+    }
+  }
+
+  private stopSpinSound() {
+    try {
+      this.spinAudio.pause();
+      this.spinAudio.currentTime = 0;
+    } catch (e) {
+      console.warn('Stop spin audio failed', e);
+    }
+  }
+
+  private playWinSound() {
+    try {
+      this.winAudio.currentTime = 0;
+      this.winAudio.play().catch(() => {});
+    } catch (e) {
+      console.warn('Win audio failed', e);
+    }
+  }
+
+  private playLoseSound() {
+    try {
+      this.loseAudio.currentTime = 0;
+      this.loseAudio.play().catch(() => {});
+    } catch (e) {
+      console.warn('Lose audio failed', e);
+    }
   }
 }

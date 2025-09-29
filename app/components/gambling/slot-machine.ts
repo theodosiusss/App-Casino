@@ -6,11 +6,10 @@ import type UserService from 'app-casino/services/user';
 
 export interface SlotMachineSignature {
   Args: {
-    icons?: string[]; // Array of icon URLs or paths
-    spinDuration?: number; // Duration of spin in milliseconds
-    cost? : number;
-    price? : number;
-
+    icons?: string[];
+    spinDuration?: number;
+    cost?: number;
+    price?: number;
   };
   Blocks: {
     default: [];
@@ -23,28 +22,21 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
   @tracked spinResults: string[] = [];
   @service declare user: UserService;
 
-   cost = this.args.cost ?? 100;
-   price = this.args.price ?? 1000;
+  cost = this.args.cost ?? 100;
+  price = this.args.price ?? 1000;
 
-  // Default values
+  // Audio elements
+  private spinAudio = new Audio('/assets/sounds/spin.mp3');
+  private winAudio = new Audio('/assets/sounds/win.mp3');
+  private loseAudio = new Audio('/assets/sounds/lose.mp3');
+
   iconWidth = 80;
   iconHeight = 80;
-  iconNumber = 10;
 
-  // Default icons if none provided
   get icons(): string[] {
     return (
       this.args.icons || [
-        '🍒',
-        '🍋',
-        '🍊',
-        '🍇',
-        '🍉',
-        '🔔',
-        '💎',
-        '7️⃣',
-        '⭐',
-        '🔔',
+        '🍒', '🍋', '🍊', '🍇', '🍉', '🔔', '💎', '7️⃣', '⭐', '🔔',
       ]
     );
   }
@@ -63,7 +55,6 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
     div.style.justifyContent = 'center';
     div.style.fontSize = '40px';
 
-    // If it's an image URL
     if (icon.match(/\.(jpg|jpeg|png|gif|svg)$/i)) {
       const img = document.createElement('img');
       img.src = icon;
@@ -82,28 +73,37 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
   async spin(): Promise<void> {
     if (this.user.balance < this.cost) return;
     if (this.isSpinning) return;
+
     this.user.changeBalance(-this.cost, true);
     this.isSpinning = true;
     this.spinResults = [];
 
+    // 🎧 Play spin sound (looped)
+    this.playSpinSound();
+
     const reels = document.querySelectorAll('.reel');
     const promises: Promise<void>[] = [];
 
-    // Spin each reel
     for (let i = 0; i < reels.length; i++) {
       promises.push(this.spinReel(reels[i] as HTMLElement, i));
     }
 
-    // Wait for all reels to stop
     await Promise.all(promises);
 
     this.isSpinning = false;
+    this.stopSpinSound(); // 🛑 stop spinning sound
 
-    if (this.spinResults.every((x) => x === this.spinResults[0])) {
-      this.user.changeBalance(this.price,true);
+    const isWin = this.spinResults.every((x) => x === this.spinResults[0]);
+    if (isWin) {
+      this.user.changeBalance(this.price, true);
+      this.playWinSound(); // 🏆
+      alert("You win!")
+    } else {
+      this.playLoseSound(); // 💸
+      alert("You lose!");
     }
-    console.log(this.spinResults);
 
+    console.log(this.spinResults);
   }
 
   private async spinReel(reel: HTMLElement, reelIndex: number): Promise<void> {
@@ -123,7 +123,6 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
         if (progress < 1) {
           requestAnimationFrame(animate);
         } else {
-          // Pick a random icon for the middle row
           const finalIndex = Math.floor(Math.random() * this.icons.length);
           const finalSymbol = this.icons[finalIndex] ?? '';
           this.spinResults[reelIndex] = finalSymbol;
@@ -139,7 +138,6 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
   private updateReelContent(reel: HTMLElement, progress: number): void {
     reel.innerHTML = '';
 
-    // Pick a "scrolling" index
     const currentIndex =
       Math.floor(progress * this.icons.length * 6) % this.icons.length;
 
@@ -155,7 +153,6 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
   private renderFinalReel(reel: HTMLElement, finalIndex: number): void {
     reel.innerHTML = '';
 
-    // top, middle, bottom
     const topIndex = (finalIndex - 1 + this.icons.length) % this.icons.length;
     const bottomIndex = (finalIndex + 1) % this.icons.length;
 
@@ -172,8 +169,42 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
     reel.appendChild(botEl);
   }
 
-  private getRandomIcon(): string {
-    const randomIndex = Math.floor(Math.random() * this.icons.length);
-    return this.icons[randomIndex] ?? '';
+  // --- Audio helpers ---
+
+  private playSpinSound() {
+    try {
+      this.spinAudio.currentTime = 0;
+      this.spinAudio.loop = true;
+      this.spinAudio.play().catch(() => {});
+    } catch (e) {
+      console.warn('Spin audio failed', e);
+    }
+  }
+
+  private stopSpinSound() {
+    try {
+      this.spinAudio.pause();
+      this.spinAudio.currentTime = 0;
+    } catch (e) {
+      console.warn('Stop spin audio failed', e);
+    }
+  }
+
+  private playWinSound() {
+    try {
+      this.winAudio.currentTime = 0;
+      this.winAudio.play().catch(() => {});
+    } catch (e) {
+      console.warn('Win audio failed', e);
+    }
+  }
+
+  private playLoseSound() {
+    try {
+      this.loseAudio.currentTime = 0;
+      this.loseAudio.play().catch(() => {});
+    } catch (e) {
+      console.warn('Lose audio failed', e);
+    }
   }
 }
