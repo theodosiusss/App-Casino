@@ -30,6 +30,17 @@ export default class GamesRoute extends Route {
 
         ]
       },
+      {
+        id: 'slot3',
+        name: 'Slot Machine MLP',
+        price: 100,
+        cost: 10,
+        icons: [
+          '/assets/images/img_10.png',
+          '/assets/images/img_11.png',
+          '/assets/images/img_12.png',
+        ]
+      },
     ];
   }
 }
