@@ -53,6 +53,11 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
     return this.args.spinDuration || 3000;
   }
 
+
+  get insufficientBalance(): boolean{
+    return this.cost > this.user.balance;
+  }
+
   private createIconElement(icon: string): HTMLElement {
     const div = document.createElement('div');
     div.className = 'slot-icon';
@@ -176,4 +181,6 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
     const randomIndex = Math.floor(Math.random() * this.icons.length);
     return this.icons[randomIndex] ?? '';
   }
+
+
 }

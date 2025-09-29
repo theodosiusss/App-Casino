@@ -54,10 +54,18 @@ export default class SlotDuelMachine extends Component<SlotMachineSignature> {
   @action
   async spinBoth() {
     if(this.round == 1) {
-      this.user.changeBalance(-this.cost, true);
+      if(this.cost > this.user.balance) {
+        alert("Nicht genug geldy")
+        return;
+      }
+      else {
+        this.user.changeBalance(-this.cost, true);
+
+      }
     }
     if (this.isSpinning || this.round >= 10) return;
     this.isSpinning = true;
+
 
     const playerReelsEls = Array.from(document.querySelectorAll('.player .reel')) as HTMLElement[];
     const botReelsEls = Array.from(document.querySelectorAll('.bot .reel')) as HTMLElement[];
