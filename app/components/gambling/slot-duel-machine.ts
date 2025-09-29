@@ -1,0 +1,134 @@
+import Component from '@glimmer/component';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { service } from '@ember/service';
+import type UserService from 'app-casino/services/user';
+import type {SlotMachineSignature} from "app-casino/components/gambling/slot-machine";
+
+export default class SlotDuelMachine extends Component<SlotMachineSignature> {
+  @service declare user: UserService;
+
+  @tracked playerWins = 0;
+  @tracked botWins = 0;
+  @tracked round = 0;
+  @tracked pot = 1000;
+  @tracked isSpinning = false;
+
+  roundWinner = '';
+
+  icons: string[] = this.args.icons ?? [
+    '🍒', '🍋', '🍊', '🍇', '🍉', '🔔', '💎', '7️⃣', '⭐'
+  ];
+
+  get cost() { return this.args.cost ?? 100; }
+  get price() { return this.args.price ?? 1000; }
+  get isLastRound(): boolean { return this.round >= 10; }
+
+  /** Create a div or img element for each icon */
+  private createIconElement(icon: string, opacity: number = 1): HTMLElement {
+    const div = document.createElement('div');
+    div.className = 'slot-icon';
+    div.style.opacity = opacity.toString();
+    div.style.width = '80px';
+    div.style.height = '80px';
+    div.style.display = 'flex';
+    div.style.alignItems = 'center';
+    div.style.justifyContent = 'center';
+    div.style.fontSize = '40px';
+
+    if (icon.match(/\.(jpg|jpeg|png|gif|svg)$/i)) {
+      const img = document.createElement('img');
+      img.src = icon;
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'contain';
+      div.appendChild(img);
+    } else {
+      div.textContent = icon;
+    }
+
+    return div;
+  }
+
+  /** Spin both player and bot reels */
+  @action
+  async spinBoth() {
+    if (this.isSpinning || this.round >= 10) return;
+    this.isSpinning = true;
+
+    const playerReelsEls = Array.from(document.querySelectorAll('.player .reel')) as HTMLElement[];
+    const botReelsEls = Array.from(document.querySelectorAll('.bot .reel')) as HTMLElement[];
+
+    // Animate all reels simultaneously
+    await Promise.all([
+      ...playerReelsEls.map(el => this.spinReel(el)),
+      ...botReelsEls.map(el => this.spinReel(el)),
+    ]);
+
+    // Helper to get the middle symbol (emoji or image src)
+    const getMiddleSymbol = (el: HTMLElement): string => {
+      const middle = el.querySelectorAll('.slot-icon')[1];
+      if (!middle) return '';
+      const img = middle.querySelector('img');
+      if (img) return img.src;
+      return middle.textContent || '';
+    };
+
+    const playerResult = playerReelsEls.map(el => getMiddleSymbol(el));
+    const botResult = botReelsEls.map(el => getMiddleSymbol(el));
+
+    // Count wins only if all middle symbols match
+    if (playerResult.every(x => x === playerResult[0])) this.playerWins++;
+    if (botResult.every(x => x === botResult[0])) this.botWins++;
+
+    this.round++;
+    if (this.round >= 10) {
+      if (this.playerWins > this.botWins) this.roundWinner = 'Player wins the pot!';
+      else if (this.botWins > this.playerWins) this.roundWinner = 'Bot wins the pot!';
+      else this.roundWinner = "It's a tie!";
+    }
+
+    this.isSpinning = false;
+  }
+
+  /** Animate a single reel */
+  private spinReel(reelEl: HTMLElement): Promise<void> {
+    return new Promise((resolve) => {
+      const duration = 2000 + Math.random() * 1000;
+      const startTime = Date.now();
+
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Update spinning icons
+        reelEl.innerHTML = '';
+        const currentIndex = Math.floor(progress * this.icons.length * 6) % this.icons.length;
+        for (let offset = -1; offset <= 1; offset++) {
+          const index = (currentIndex + offset + this.icons.length) % this.icons.length;
+          // @ts-ignore
+          reelEl.appendChild(this.createIconElement(this.icons[index], offset === 0 ? 1 : 0.5));
+        }
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          // Render final top/middle/bottom symbols
+          const finalIndex = Math.floor(Math.random() * this.icons.length);
+          const topIndex = (finalIndex - 1 + this.icons.length) % this.icons.length;
+          const bottomIndex = (finalIndex + 1) % this.icons.length;
+
+          reelEl.innerHTML = '';
+          [topIndex, finalIndex, bottomIndex].forEach((i, idx) => {
+            // @ts-ignore
+            reelEl.appendChild(this.createIconElement(this.icons[i], idx === 1 ? 1 : 0.5));
+          });
+
+          resolve();
+        }
+      };
+
+      animate();
+    });
+  }
+}

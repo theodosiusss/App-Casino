@@ -6,12 +6,13 @@
     <ul>
       {{#each @model as |game|}}
         <li>
-          <LinkTo @route="games.slot" @model={{game.id}}>
-            {{game.name}}
-          </LinkTo>
+          {{game.name}}:
+          <LinkTo @route="games.slot" @model={{game.id}}>Play Solo</LinkTo> |
+          <LinkTo @route="games.slot-duel" @model={{game.id}}>Duel Mode</LinkTo>
         </li>
       {{/each}}
     </ul>
+
   </div>
 </div>
 

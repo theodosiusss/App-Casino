@@ -1,0 +1,45 @@
+{{page-title "Slot Duel Mode"}}
+
+<div class="bg justify-content-center my-banner">
+  <div class="bg-dark justify-content-center p-5 rounded-4">
+    <h2 class="text-center">Slot Duel: You vs Bot</h2>
+    <p class="text-center">Pot: {{this.pot}} credits</p>
+
+    <div class="duel-container" style="display:flex; gap:2rem; justify-content:center;">
+      <div class="player">
+        <h3>Player</h3>
+        <div class="slots">
+          <div class="reel"></div>
+          <div class="reel"></div>
+          <div class="reel"></div>
+        </div>
+        <p>Wins: {{this.playerWins}}</p>
+      </div>
+
+      <div class="bot">
+        <h3>Bot</h3>
+        <div class="slots">
+          <div class="reel"></div>
+          <div class="reel"></div>
+          <div class="reel"></div>
+        </div>
+        <p>Wins: {{this.botWins}}</p>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="spin-button mt-4"
+      {{on "click" this.spinBoth}}
+      disabled={{this.isSpinning}}
+    >
+      {{#if this.isSpinning}}Spinning...{{else}}Spin Both!{{/if}}
+    </button>
+
+    {{#if this.isLastRound}}
+      <h3 class="mt-3 text-center">
+        Winner: {{this.roundWinner}}
+      </h3>
+    {{/if}}
+  </div>
+</div>

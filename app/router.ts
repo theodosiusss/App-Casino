@@ -10,6 +10,7 @@ Router.map(function () {
   this.route('home', {path: '/'});
   this.route('games', function() {
     this.route('slot', { path: 'slot/:id' });
+    this.route('slot-duel', { path: 'slot-duel/:id' });
   });
   this.route('login');
   this.route('payment');
