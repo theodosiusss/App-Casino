@@ -33,6 +33,7 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
   iconWidth = 80;
   iconHeight = 80;
 
+  // Default icons if none provided
   get icons(): string[] {
     return (
       this.args.icons || [
@@ -43,6 +44,11 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
 
   get spinDuration(): number {
     return this.args.spinDuration || 3000;
+  }
+
+
+  get insufficientBalance(): boolean{
+    return this.cost > this.user.balance;
   }
 
   private createIconElement(icon: string): HTMLElement {
@@ -123,6 +129,7 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
         if (progress < 1) {
           requestAnimationFrame(animate);
         } else {
+          // Pick a random icon for the middle row
           const finalIndex = Math.floor(Math.random() * this.icons.length);
           const finalSymbol = this.icons[finalIndex] ?? '';
           this.spinResults[reelIndex] = finalSymbol;
@@ -189,22 +196,26 @@ export default class SlotMachine extends Component<SlotMachineSignature> {
       console.warn('Stop spin audio failed', e);
     }
   }
-
-  private playWinSound() {
-    try {
-      this.winAudio.currentTime = 0;
-      this.winAudio.play().catch(() => {});
-    } catch (e) {
-      console.warn('Win audio failed', e);
+    private playWinSound()
+    {
+      try {
+        this.winAudio.currentTime = 0;
+        this.winAudio.play().catch(() => {
+        });
+      } catch (e) {
+        console.warn('Win audio failed', e);
+      }
     }
-  }
 
-  private playLoseSound() {
-    try {
-      this.loseAudio.currentTime = 0;
-      this.loseAudio.play().catch(() => {});
-    } catch (e) {
-      console.warn('Lose audio failed', e);
-    }
+private playLoseSound()
+{
+  try {
+    this.loseAudio.currentTime = 0;
+    this.loseAudio.play().catch(() => {
+    });
+  } catch (e) {
+    console.warn('Lose audio failed', e);
   }
 }
+}
+

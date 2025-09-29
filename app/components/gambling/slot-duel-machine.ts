@@ -59,13 +59,20 @@ export default class SlotDuelMachine extends Component<SlotMachineSignature> {
   @action
   async spinBoth() {
     if (this.isSpinning || this.round >= 10) return;
+    if(this.round == 1) {
+      if(this.cost > this.user.balance) {
+        alert("Nicht genug geldy")
+        return;
+      }
+      else {
+        this.user.changeBalance(-this.cost, true);
 
-    if (this.round === 1) {
-      this.user.changeBalance(-this.cost, true);
+      }
     }
 
     this.isSpinning = true;
     this.playSpinSound(); // 🎧 Start spin sound
+
 
     const playerReelsEls = Array.from(document.querySelectorAll('.player .reel')) as HTMLElement[];
     const botReelsEls = Array.from(document.querySelectorAll('.bot .reel')) as HTMLElement[];
@@ -88,6 +95,7 @@ export default class SlotDuelMachine extends Component<SlotMachineSignature> {
     const playerResult = playerReelsEls.map(el => getMiddleSymbol(el));
     const botResult = botReelsEls.map(el => getMiddleSymbol(el));
 
+    // Count wins only if all middle symbols match
     if (playerResult.every(x => x === playerResult[0])) this.playerWins++;
     if (botResult.every(x => x === botResult[0])) this.botWins++;
 
