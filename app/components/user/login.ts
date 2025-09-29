@@ -9,6 +9,8 @@ export default class LoginComponent extends Component {
   @service declare user: UserService;
   @service declare router: Router;
 
+  stream = null;
+
   badges = [{
       path: "assets/badges/img.png",
       price: 10000,
@@ -60,6 +62,41 @@ export default class LoginComponent extends Component {
     this.user.addBadge(path);
     console.log(this.user.badges);
     this.user.changeBalance(-price,true);
+  }
+
+
+  @action
+  async startVerification() {
+    // Modal öffnen
+    // @ts-ignore
+    const modal = new bootstrap.Modal(document.getElementById("verifyModal"));
+    modal.show();
+
+    const videoEl = document.getElementById("verifyVideo");
+    const statusEl = document.getElementById("verifyStatus");
+
+    try {
+      // @ts-ignore
+      this.stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      // @ts-ignore
+      videoEl.srcObject = this.stream;
+      // @ts-ignore
+      statusEl.textContent = "Verifiziere ...";
+
+      // Nach 15 Sekunden stoppen
+      setTimeout(() => {
+        // @ts-ignore
+        this.stream.getTracks().forEach((track) => track.stop());
+        // @ts-ignore
+        statusEl.textContent = "✅ Verified!";
+        this.user.verify();
+        setTimeout(()=> modal.hide(), 1000);
+      }, 5000);
+    } catch (err) {
+      // @ts-ignore
+      statusEl.textContent = "❌ Kamera konnte nicht gestartet werden.";
+      console.error("Kamera-Fehler:", err);
+    }
   }
 
 

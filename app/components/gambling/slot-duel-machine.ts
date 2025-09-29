@@ -10,7 +10,7 @@ export default class SlotDuelMachine extends Component<SlotMachineSignature> {
 
   @tracked playerWins = 0;
   @tracked botWins = 0;
-  @tracked round = 0;
+  @tracked round = 1;
   @tracked pot = 1000;
   @tracked isSpinning = false;
 
@@ -53,6 +53,9 @@ export default class SlotDuelMachine extends Component<SlotMachineSignature> {
   /** Spin both player and bot reels */
   @action
   async spinBoth() {
+    if(this.round == 1) {
+      this.user.changeBalance(-this.cost, true);
+    }
     if (this.isSpinning || this.round >= 10) return;
     this.isSpinning = true;
 
@@ -83,9 +86,13 @@ export default class SlotDuelMachine extends Component<SlotMachineSignature> {
 
     this.round++;
     if (this.round >= 10) {
-      if (this.playerWins > this.botWins) this.roundWinner = 'Player wins the pot!';
+      if (this.playerWins > this.botWins){
+        this.roundWinner = 'Player wins the pot!';
+        this.user.changeBalance(this.pot,true);
+      }
       else if (this.botWins > this.playerWins) this.roundWinner = 'Bot wins the pot!';
       else this.roundWinner = "It's a tie!";
+      setTimeout(()=> window.location.reload(),3000);
     }
 
     this.isSpinning = false;
@@ -93,6 +100,7 @@ export default class SlotDuelMachine extends Component<SlotMachineSignature> {
 
   /** Animate a single reel */
   private spinReel(reelEl: HTMLElement): Promise<void> {
+
     return new Promise((resolve) => {
       const duration = 2000 + Math.random() * 1000;
       const startTime = Date.now();
